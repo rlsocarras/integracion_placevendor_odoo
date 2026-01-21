@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_order_form_laravel_integration" model="ir.ui.view">
+            <field name="name">sale.order.form.laravel.integration</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_quotation_send']" position="after">
+                    <button name="action_open_warehouse_window" type="object"
+                            string="Enviar Entrega a Place Vendor"
+                            class="oe_highlight"
+                            invisible="state != 'sale'"
+                            groups="sales_team.group_sale_salesman"/>
+                </xpath>
+            </field>
+        </record>
+
+
+       <record id="view_warehouse_selection_form" model="ir.ui.view">
+            <field name="name">sale.order.warehouse.selection.form</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <form string="Seleccionar Almacén para Envío">
+                    <group>
+                        <field name="warehouse_selection" 
+                            widget="radio" 
+                            options="{'horizontal': true}"
+                            invisible="warehouse_count &lt;= 1"/>
+                    </group>
+                    <footer>
+                        <button name="action_confirm_warehouse_selection" 
+                        type="object" 
+                        string="Confirmar y Enviar" 
+                        class="btn-primary"/>
+                        <button string="Cancelar" 
+                        class="btn-default" 
+                        special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

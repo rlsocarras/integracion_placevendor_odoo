@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_placevendor_config_user,placevendor.config.user,model_placevendor_config,base.group_user,1,1,1,0
+access_placevendor_config_manager,placevendor.config.manager,model_placevendor_config,base.group_system,1,1,1,1

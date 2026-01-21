@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List View para Odoo 18 -->
+    <record id="view_placevendor_config_list" model="ir.ui.view">
+        <field name="name">placevendor.config.list</field>
+        <field name="model">placevendor.config</field>
+        <field name="arch" type="xml">
+            <list string="Configuraciones Place Vendor">
+                <field name="laravel_user"/>
+                <field name="is_authenticated"/>
+                <field name="last_authentication" widget="date"/>
+                <field name="odoo_user_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="active" invisible="1"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Form View para Odoo 18 - CORREGIDO -->
+    <record id="view_placevendor_config_form" model="ir.ui.view">
+        <field name="name">placevendor.config.form</field>
+        <field name="model">placevendor.config</field>
+        <field name="arch" type="xml">
+            <form string="Configuración Place Vendor">
+                <header>
+                    <button name="test_authentication" type="object" 
+                        string="Probar Autenticación" class="btn-primary"/>
+                    <field name="is_authenticated" readonly="1"/>
+                </header>
+                
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="test_authentication" type="object" 
+                            string="Probar Conexión" class="oe_stat_button"
+                            icon="fa-refresh"/>
+                    </div>
+                    
+                    <div class="oe_title">
+                        <h1>
+                            <field name="laravel_user" placeholder="Usuario de Place Vendor..."/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group string="Credenciales">
+                            <field name="laravel_user"/>
+                            <field name="laravel_password" password="true"/>
+                            <field name="laravel_url"/>
+                        </group>
+                        
+                        <group string="Estado">
+                            <field name="is_authenticated" readonly="1"/>
+                            <field name="last_authentication" readonly="1" widget="datetime"/>
+                        </group>
+                    </group>
+                    
+                    <!-- Error solo visible cuando no está autenticado -->
+                    <group invisible="is_authenticated">
+                        <field name="authentication_error" readonly="1" nolabel="1"/>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Información Odoo">
+                            <group>
+                                <field name="odoo_user_id" readonly="1"/>
+                                <field name="company_id" readonly="1"/>
+                                <field name="active"/>
+                            </group>
+                        </page>
+                        
+                        <!-- Página Token solo visible cuando está autenticado -->
+                        <page string="Token" invisible="not is_authenticated">
+                            <group>
+                                <field name="token" readonly="1" password="true"/>
+                                <field name="token_expiration" readonly="1" widget="datetime"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Search View para Odoo 18 - CORREGIDO -->
+    <record id="view_placevendor_config_search" model="ir.ui.view">
+        <field name="name">placevendor.config.search</field>
+        <field name="model">placevendor.config</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Configuraciones">
+                <field name="laravel_user"/>
+                <field name="is_authenticated"/>
+                
+                <!-- Filtros simples - Odoo 18 -->
+                <filter name="authenticated" string="Autenticados" 
+                    domain="[('is_authenticated', '=', True)]"/>
+                <filter name="not_authenticated" string="No Autenticados" 
+                    domain="[('is_authenticated', '=', False)]"/>
+                <filter name="active" string="Activos" 
+                    domain="[('active', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+    
+    <!-- Action para Odoo 18 -->
+    <record id="action_placevendor_config" model="ir.actions.act_window">
+        <field name="name">Configuraciones Place Vendor</field>
+        <field name="res_model">placevendor.config</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Configuración de conexión con Place Vendor
+            </p>
+            <p>
+                Configura tus credenciales para autenticarte con la API de Place Vendor.
+                Después de guardar, puedes probar la conexión.
+            </p>
+        </field>
+    </record>
+    
+    <!-- Menu Items -->
+    <menuitem id="menu_placevendor_root" 
+        name="Place Vendor" 
+        sequence="100"/>
+    
+    <menuitem id="menu_placevendor_config" 
+        parent="menu_placevendor_root"
+        action="action_placevendor_config"
+        sequence="10"/>
+</odoo>
