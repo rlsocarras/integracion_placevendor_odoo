@@ -546,8 +546,6 @@ class SaleOrder(models.Model):
     def get_warehouses_by_company(self, warehouse_name=None):
         """Obtiene almacenes por compañía desde la API GraphQL"""
         auth_config =  self._autenticacion_placevendor()
-       
-
         if auth_config==1:
             return self._notify('Error', "No hay configuración de Place Vendor para este usuario")
         if auth_config==2:
@@ -652,15 +650,16 @@ class SaleOrder(models.Model):
             return []
     
     def action_open_warehouse_window(self):
-        """Abre el wizard existente para seleccionar almacén"""
+        """Abre la vetana para seleccionar almacén"""
         self.ensure_one()
         
         # Verificar que exista al menos un almacén disponible
         warehouses = self.get_warehouses_by_company()
-        _logger.info(f"Alamacenes : {warehouses}")
-        if hasattr(warehouses,'type'):
-             _logger.info(f"hasattr(warehouses,'tag') : ")
-             return warehouses
+       
+
+        if isinstance(warehouses, dict) or 'type' in warehouses:
+            return warehouses
+        
         
         # Si solo hay un almacén, usarlo directamente
         if len(warehouses) == 1:
@@ -692,11 +691,11 @@ class SaleOrder(models.Model):
     def _get_warehouse_selection(self):
         """Método dinámico para obtener la lista de almacenes"""
         warehouses = self.get_warehouses_by_company()
-        _logger.error(f"Error en la conexión: {warehouses}")
+        _logger.error(f"warehoses robertttt: {warehouses}")
         selection = []
-        if  hasattr(warehouses, 'id'):
-            for wh in warehouses:
-                selection.append((
+        
+        for wh in warehouses:
+            selection.append((
                     wh['id'],
                     f"{wh['name']} - {wh['address'] or 'Sin dirección'}"
                 ))
