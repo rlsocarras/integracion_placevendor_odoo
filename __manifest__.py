@@ -1,11 +1,11 @@
 {
-    'name': 'Place Vendor Delivery Integration',
+    'name': 'Integración Place Vendor Odoo',
     'version': '1.0',
     'category': 'Sales',
-    'summary': 'Integración para enviar entregas a Place Vendor vía GraphQL',
+    'summary': 'Integración entre Place Vendor y Odoo para el envío de entregas,recepciones,productos etc.',
     
     'description': """
-    Módulo de integración entre Odoo y Place Vendor para el envío de entregas.
+    Integración entre Place Vendor y Odoo para el envío de entregas,recepciones,productos etc.
 
     INSTRUCCIONES DE USO:
 
@@ -67,7 +67,7 @@
     ],
 
     
-    'icon': '/odoo_placevendor_delivery/static/description/icon.png',
+    'icon': '/integracion_placevendor_odoo/static/description/icon.png',
 
     'support': 'robertoleonsocarras@gmail.com',
     'license': 'LGPL-3',

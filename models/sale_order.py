@@ -678,7 +678,7 @@ class SaleOrder(models.Model):
             'name': 'Seleccionar Almacén',
             'res_model': 'sale.order',
             'view_mode': 'form',
-            'view_id': self.env.ref('odoo_placevendor_delivery.view_warehouse_selection_form').id,
+            'view_id': self.env.ref('integracion_placevendor_odoo.view_warehouse_selection_form').id,
             'res_id': self.id,
             'target': 'new',
             'context': {
