@@ -50,10 +50,11 @@
     """,
     
     'author': 'Roberto León Socarrás',
-    'depends': ['base', 'sale', 'sale_stock', 'mail'],
+    'depends': ['base', 'sale', 'sale_stock', 'mail','purchase'],
     
     'data': [
         'views/sale_order_view.xml',
+        'views/purchase_order_views.xml',
         'views/placevendor_config_views.xml',
         'security/ir.model.access.csv'
     ],

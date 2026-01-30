@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Vista heredada para añadir botón en órdenes de compra -->
+        <record id="view_purchase_order_form_laravel_integration" model="ir.ui.view">
+            <field name="name">purchase.order.form.laravel.integration</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_confirm']" position="after">
+                    <button name="action_open_warehouse_window" type="object"
+                            string="Enviar Recepción a Place Vendor"
+                            class="oe_highlight"
+                            invisible="state not in ['purchase', 'done']"
+                            groups="purchase.group_purchase_user"/>
+                </xpath>
+                
+                <!-- También puedes añadir un botón en el header si lo prefieres -->
+                <!-- <xpath expr="//header/button[@name='action_rfq_send']" position="after">
+                    <button name="action_open_warehouse_window" type="object"
+                            string="Enviar a Place Vendor"
+                            class="oe_highlight"
+                            invisible="state not in ['purchase', 'done']"
+                            groups="purchase.group_purchase_user"/>
+                </xpath> -->
+            </field>
+        </record>
+
+        <!-- Vista para selección de almacén en compras -->
+        <record id="view_warehouse_selection_form_purchase" model="ir.ui.view">
+            <field name="name">purchase.order.warehouse.selection.form</field>
+            <field name="model">purchase.order</field>
+            <field name="arch" type="xml">
+                <form string="Seleccionar Almacén para Recepción">
+                    <group>
+                        <field name="warehouse_selection" 
+                            widget="radio" 
+                            options="{'horizontal': true}"
+                            invisible="warehouse_count &lt;= 1"/>
+                    </group>
+                    <footer>
+                        <button name="action_confirm_warehouse_selection" 
+                            type="object" 
+                            string="Confirmar y Enviar" 
+                            class="btn-primary"
+                            confirm="¿Está seguro de enviar la recepción al almacén seleccionado?"/>
+                        <button string="Cancelar" 
+                            class="btn-default" 
+                            special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Vista adicional: Si quieres mostrar un botón diferente cuando solo hay un almacén -->
+        <record id="view_purchase_order_form_laravel_single" model="ir.ui.view">
+            <field name="name">purchase.order.form.laravel.single</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_confirm']" position="after">
+                    <button name="send_reception_to_laravel" type="object"
+                            string="Enviar Recepción a Place Vendor"
+                            class="oe_highlight"
+                            invisible="state not in ['purchase', 'done'] or warehouse_count != 1"
+                            groups="purchase.group_purchase_user"
+                            context="{'warehouse_id': 1}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Action para abrir la ventana de selección -->
+        <record id="action_open_warehouse_window_purchase" model="ir.actions.act_window">
+            <field name="name">Seleccionar Almacén</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_warehouse_selection_form_purchase"/>
+        </record>
+    </data>
+</odoo>
