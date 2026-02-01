@@ -27,16 +27,29 @@ class SaleOrder(models.Model):
         compute='_compute_warehouse_count'
     )
 
+    delivery_type = fields.Selection(
+        selection=[
+            ('DELIVERY', 'Delivery'),
+            ('PICKUP', 'Pickup'),
+        ],
+        string='Tipo de Entrega',
+        default='DELIVERY'
+    )
+
     def send_delivery_to_laravel(self,warehouse_id):
         """Envía la entrega a Place Vendor vía GraphQL"""
         for order in self:
             if not hasattr(order, 'picking_ids') or not order.picking_ids:
                 return self._notify('Error', 'No hay entregas para esta orden o módulo sale_stock no instalado')
 
+            # Obtener el tipo de entrega
+            delivery_type = order.delivery_type  
+            _logger.info(f"Tipo de entrega: {delivery_type}")  # 'DELIVERY' o 'PICKUP'
+
             errors = []
             for picking in order.picking_ids:
                 try:
-                    self._send_graphql_mutation(picking, order,warehouse_id)
+                    self._send_graphql_mutation(picking, order,warehouse_id,delivery_type)
                 except Exception as e:
                     errors.append(f"{picking.name}: {str(e)}")
 
@@ -56,7 +69,7 @@ class SaleOrder(models.Model):
             }
         }
 
-    def _send_graphql_mutation(self, picking, order,warehouse_id):
+    def _send_graphql_mutation(self, picking, order,warehouse_id,delivery_type):
 
         auth_config =  self._autenticacion_placevendor()
 
@@ -135,7 +148,7 @@ class SaleOrder(models.Model):
             
             # Variables para la mutación de entrega
             delivery_variables = {
-                'type': 'DELIVERY',
+                'type': delivery_type,
                 'doc_origin': doc_origin,
                 'firma': firma,
                 'address_delivery': address_delivery,

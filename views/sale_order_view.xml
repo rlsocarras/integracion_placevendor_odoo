@@ -23,6 +23,12 @@
             <field name="arch" type="xml">
                 <form string="Seleccionar Almacén para Envío">
                     <group>
+
+                    <!-- Mostrar el tipo de entrega -->
+                        <field name="delivery_type" 
+                            widget="radio" 
+                            options="{'horizontal': true}"/>
+                            
                         <field name="warehouse_selection" 
                             widget="radio" 
                             options="{'horizontal': true}"
