@@ -36,7 +36,7 @@
                         <field name="warehouse_selection" 
                             widget="radio" 
                             options="{'horizontal': true}"
-                            invisible="warehouse_count >= 1"/>
+                            invisible="warehouse_count &lt;= 1"/>
                     </group>
                     <footer>
                         <button name="action_confirm_warehouse_selection" 
